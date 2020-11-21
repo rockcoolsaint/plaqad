@@ -34,6 +34,18 @@ class MessagesController < ApplicationController
     end
   end
 
+  def update
+    respond_to do |format|
+      if @message.update_attribute(:hidden, !@message.hidden)
+        format.html { redirect_to admin_root_path, notice: 'Message was successfully updated.' }
+        format.json { render :show, status: :no_content, location: @message }
+      else
+        format.html { render :new }
+        format.json { render json: @message.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_message
