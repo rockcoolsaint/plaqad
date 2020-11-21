@@ -4,11 +4,11 @@ class MessagesController < ApplicationController
   # GET /messages
   # GET /messages.json
   def index
-    if params[:filter].blank? || params[:filter]
-      @messages = Message.all
+    if params[:filter].blank?
+      @messages = Message.desc.all
     else
       my_ip = request.remote_ip
-      @messages = Message.by_ip_address(my_ip)
+      @messages = Message.by_ip_address(my_ip).desc
     end
   end
 
