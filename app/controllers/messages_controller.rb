@@ -4,11 +4,11 @@ class MessagesController < ApplicationController
   # GET /messages
   # GET /messages.json
   def index
-    if params[:filter].blank? || params[:filter]
-      @messages = Message.all
+    if params[:filter].blank?
+      @messages = Message.desc.all
     else
       my_ip = request.remote_ip
-      @messages = Message.by_ip_address(my_ip)
+      @messages = Message.by_ip_address(my_ip).desc
     end
   end
 
@@ -27,6 +27,18 @@ class MessagesController < ApplicationController
       if @message.save
         format.html { redirect_to messages_path, notice: 'Message was successfully created.' }
         format.json { render :show, status: :created, location: @message }
+      else
+        format.html { render :new }
+        format.json { render json: @message.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def update
+    respond_to do |format|
+      if @message.update_attribute(:hidden, !@message.hidden)
+        format.html { redirect_to admin_root_path, notice: 'Message was successfully updated.' }
+        format.json { render :show, status: :no_content, location: @message }
       else
         format.html { render :new }
         format.json { render json: @message.errors, status: :unprocessable_entity }

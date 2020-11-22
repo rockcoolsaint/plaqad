@@ -1,5 +1,15 @@
 <p id="notice"><%= notice %></p>
 
+<div>
+  <% if user_signed_in? %>
+    <li><%= link_to 'Logout', destroy_user_session_path, method: :delete %></li>
+  <% else %>
+    <li><%= link_to 'Log in', new_user_session_path %></li>
+  <% end %>
+</div>
+
+<div>Visit <%= link_to 'admin', admin_root_path %> area</div>
+
 <h1>Messages</h1>
 
 <div>
@@ -10,13 +20,15 @@
 </div>
 
 <% @messages.each do |message| %>
-  <div class="card-body">
-    <hr />
-    <p class="card-text"><%= message.entry %></p>
-    <p class="card-text">
-        <small class="text-muted">
-            <span class="text-muted">Added <%= message.created_at.to_s(:short) %> by <%= message.name %></span>
-        </small>
-    </p>
-  </div>
+  <% if !message.hidden %>
+    <div class="card-body">
+      <hr />
+      <p class="card-text"><%= message.entry %></p>
+      <p class="card-text">
+          <small class="text-muted">
+              <span class="text-muted">Added <%= message.created_at.to_s(:short) %> by <%= message.name %></span>
+          </small>
+      </p>
+    </div>
+  <% end %>
 <% end %>
